@@ -23,24 +23,27 @@ bcrypt = Bcrypt()
 class PetException(Exception):
     pass
 
-# EXAMPLE PET MODEL - for reference to start, delete later
-class Pet(db.Model, SerializerMixin):
-    __tablename__ = 'pets'  # tablename is required
+# EXAMPLE - converted Pet model into Student
+class Student(db.Model, SerializerMixin):
+    __tablename__ = 'students'  # tablename is required
 
     __table_args__ = (db.CheckConstraint('age >= 0', name='ck_age_not_neg'), )
 
     # define columns on our table
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    age = db.Column(db.Integer)
-    type = db.Column(db.String)
-    owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'))  # fk for owners.id
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    dob = db.Column(db.Date, nullable=False) #Ben said this should work, but need to test and confirm... might be datetime
+    user_relationship = db.Column(db.String, nullable=False) # need to validate, options are Mother, Father, Specify Other Guardian ___
+    age = db.Column(db.Integer, nullable=False)
+    expected_grade_level = db.Column(db.String) # PreK, Kindergarten, 1st grade, etc.
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # fk for for users, i.e. parents
 
     # relationship needs the class name (as a str)
-    owner = db.relationship('Owner', back_populates='pets')
+    user = db.relationship('User', back_populates='students')
 
     # serialization rules
-    serialize_rules = ('-owner.pets',) # -owner_id is optional
+    serialize_rules = ('-user.students',) # -owner_id is optiona
     # serialize_only = ['name']
 
     @validates('age')
@@ -57,15 +60,28 @@ class Application(db.Model, SerializerMixin):
     __tablename__ = 'applications'
 
     id = db.Column(db.Integer, primary_key=True)
-    applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    sat_score = db.Column(db.Integer,)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id')) 
+    school_choice = db.Column(db.String, nullable=False) # for now, Alpha School, Beta School, etc
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_signature = db.Column(db.String, nullable=False) # user types name, validate matches name from user_id pulled from users table
 
-    pets = db.relationship('Pet', back_populates='owner')
+    students = db.relationship('Student', back_populates='application')
+    users = db.relationship('User', back_populates='application')
 
-    serialize_rules = ['-pets.owner']
+    serialize_rules = ['-student.application', '-user.application']
 
     def __repr__(self) -> str:
         return f'<Owner {self.id} {self.name}>'
+
+
+# REVISIT - was thinking this might make sense as an intermediary table that connects applications of siblings... probably will end up deleting
+# class Sibling(db.Model, SerializerMixin):
+#     __tablename__ = 'siblings'
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     sibling_1 = db.Column(db.Integer, db.ForeignKey('applications.id'))
+#     sibling_2 = db.Column(db.Integer, db.ForeignKey('applications.id'))
+#     sibling_3 = db.Column(db.Integer, db.ForeignKey('applications.id'))
 
 
 class User(db.Model, SerializerMixin):
@@ -77,8 +93,10 @@ class User(db.Model, SerializerMixin):
     user_type = db.Column(db.String, nullable=False) # Applicant vs Staff
     staff_type = db.Column(db.String, nullable=True) # General vs Priveleged
 
+    students = db.relationship('Student', back_populates="user")
+    applications = db.relationship('Application', back_populates="user")
 
-    serialize_rules = ['-password_hash']
+    serialize_rules = ['-password_hash', '-application.user', '-student.user']
 
     @hybrid_property
     def password(self):
