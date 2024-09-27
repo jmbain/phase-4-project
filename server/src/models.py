@@ -23,7 +23,6 @@ bcrypt = Bcrypt()
 class PetException(Exception):
     pass
 
-# EXAMPLE - converted Pet model into Student
 class Student(db.Model, SerializerMixin):
     __tablename__ = 'students'  # tablename is required
 
@@ -46,14 +45,15 @@ class Student(db.Model, SerializerMixin):
     serialize_rules = ('-user.students',) # -owner_id is optiona
     # serialize_only = ['name']
 
-    @validates('age')
-    def validates_age(self, key, new_age):
-        if new_age < 0:
-            raise PetException('age cannot be negative')
-        return new_age  # similar to self._age = new_age
+#JB note to revisit validates...
+    # @validates('age')
+    # def validates_age(self, key, new_age):
+    #     if new_age < 0:
+    #         raise PetException('age cannot be negative')
+    #     return new_age  # similar to self._age = new_age
 
     def __repr__(self) -> str:
-        return f'<Pet {self.id} {self.name} {self.age}>'
+        return f'<Student {self.id} {self.first_name} {self.last_name} {self.age} {self.expected_grade_level}>'
     
 # Classes JB will actually use!!!
 class Application(db.Model, SerializerMixin):
@@ -71,17 +71,7 @@ class Application(db.Model, SerializerMixin):
     serialize_rules = ['-student.application', '-user.application']
 
     def __repr__(self) -> str:
-        return f'<Owner {self.id} {self.name}>'
-
-
-# REVISIT - was thinking this might make sense as an intermediary table that connects applications of siblings... probably will end up deleting
-# class Sibling(db.Model, SerializerMixin):
-#     __tablename__ = 'siblings'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     sibling_1 = db.Column(db.Integer, db.ForeignKey('applications.id'))
-#     sibling_2 = db.Column(db.Integer, db.ForeignKey('applications.id'))
-#     sibling_3 = db.Column(db.Integer, db.ForeignKey('applications.id'))
+        return f'<Application {self.id} {self.student_id} {self.school_choice}>'
 
 
 class User(db.Model, SerializerMixin):
