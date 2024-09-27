@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, ReactDOM } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import {userLoader, applicationsLoader} from './loaders.js' 
+import {userLoader, applicationsLoader} from './Loaders.js'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import ErrorPage from './components/ErrorPage.jsx'
 import Home from './components/Home.jsx'
@@ -45,8 +45,8 @@ const router = createBrowserRouter([
   }
 ])
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )
