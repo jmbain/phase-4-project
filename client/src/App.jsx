@@ -2,12 +2,63 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import NavBar from './components/ApplicantNavbar'
+import { Outlet } from 'react-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
+  //Initial app-level states
+  const [count, setCount] = useState(0) // Came with vite set up
+  const [searchText, setSearchText] = useState("")
+  const [selectedFilter, setSelectedFilter] = useState("All")
+  const [applications, setApplications] = useState([])
+  const [schools, setSchools] = useState([])
+  const [students, setStudents] = useState([])
+
+  //Initial filter logic using applications as an example
+  const filteredApplications = applications.filter(application => {
+    if(selectedFilter=="All") {
+      return application
+    }
+    return application.filter === selectedFilter
+  })
+
+  //Initial search logic using schools as an example
+  const searchedSchools = schools.filter(school => {
+    return school.school_name.toUpperCase().includes(searchText.toUpperCase())
+  })
+
+  // Not sure if still need, but assuming for now this will be replaced by the loaders...
+  useEffect(() => {
+    fetch("http://localhost:4242/schools")
+    .then(r = r.json())
+    .then(schoolData => setSchools(schoolData))
+    }
+    ,[]
+  )
+
+  useEffect(() => {
+    fetch("http://localhost:4242/students")
+    .then(r = r.json())
+    .then(studentData => setStudents(studentData))
+    }
+    ,[]
+  )
+
+  useEffect(() => {
+    fetch("http://localhost:4242/applications")
+    .then(r = r.json())
+    .then(applicationData => setApplications(applicationData))
+    }
+    ,[]
+  )
 
   return (
     <>
+      <div>
+        <Header />
+        <NavBar />
+        <Outlet />
+      </div>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

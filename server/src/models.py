@@ -75,14 +75,14 @@ class Application(db.Model, SerializerMixin):
     __tablename__ = 'applications'
 
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id')) 
-    school_id = db.Column(db.String, db.ForeignKey('schools.id')) # for now, Alpha School, Beta School, etc
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id')) 
+    school_id = db.Column(db.String, db.ForeignKey('school.id')) # for now, Alpha School, Beta School, etc
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user_signature = db.Column(db.String, nullable=False) # user types name, validate matches name from user_id pulled from users table
 
-    students = db.relationship('Student', back_populates='application')
-    users = db.relationship('User', back_populates='application')
-    schools = db.relationship('School', back_populates='application')
+    student = db.relationship('Student', back_populates='application')
+    user = db.relationship('User', back_populates='application')
+    school = db.relationship('School', back_populates='application')
 
     serialize_rules = ['-student.application', '-user.application']
 
