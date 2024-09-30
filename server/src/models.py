@@ -34,7 +34,7 @@ class Student(db.Model, SerializerMixin):
     last_name = db.Column(db.String, nullable=False)
     dob = db.Column(db.Date, nullable=False) #Ben said this should work, but need to test and confirm... might be datetime
     user_relationship = db.Column(db.String, nullable=False) # need to validate, options are Mother, Father, Specify Other Guardian ___
-    age = db.Column(db.Integer, nullable=False)
+    age = db.Column(db.Integer, nullable=False) # Might be optional because can be calculated from DOB
     expected_grade_level = db.Column(db.String) # PreK, Kindergarten, 1st grade, etc.
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # fk for for users, i.e. parents
 
@@ -55,23 +55,40 @@ class Student(db.Model, SerializerMixin):
     def __repr__(self) -> str:
         return f'<Student {self.id} {self.first_name} {self.last_name} {self.age} {self.expected_grade_level}>'
     
+class School(db.Model, SerializerMixin):
+    __tablename__ = 'schools'
+
+    id = db.Column(db.Integer, primary_key=True)
+    gov_id = db.Column(db.Integer, unique=True)
+    school_name = db.Column(db.String)
+    school_zip = db.Column(db.Integer)
+    school_state = db.Column(db.String)
+    school_city = db.Column(db.String)
+
+    applications = db.relationship('Application', back_populates="school")
+    #TBD if serialize rules required for this...
+    serialize_rules = ['-application.school'] 
+
+
 # Classes JB will actually use!!!
 class Application(db.Model, SerializerMixin):
     __tablename__ = 'applications'
 
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id')) 
-    school_choice = db.Column(db.String, nullable=False) # for now, Alpha School, Beta School, etc
+    school_id = db.Column(db.String, db.ForeignKey('schools.id')) # for now, Alpha School, Beta School, etc
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user_signature = db.Column(db.String, nullable=False) # user types name, validate matches name from user_id pulled from users table
 
     students = db.relationship('Student', back_populates='application')
     users = db.relationship('User', back_populates='application')
+    schools = db.relationship('School', back_populates='application')
 
     serialize_rules = ['-student.application', '-user.application']
 
+    #TBD Not sure this repr will be backwards compatible with students relationship...
     def __repr__(self) -> str:
-        return f'<Application {self.id} {self.student_id} {self.school_choice}>'
+        return f'<Application {self.id} Name: {self.students.first_name} {self.students.last_name}>'
 
 
 class User(db.Model, SerializerMixin):

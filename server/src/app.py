@@ -58,11 +58,16 @@ def all_users():
 def users_by_id():
     pass
 
-@app.route('/api/applicants')
+@app.route('/api/users/<string:type>', methods=["GET"])
+def applicants():
+    """Can specifically access Applicant users, i.e. so Staff-type users can see data for an Applicant who has many Students"""
+    pass
+
+@app.route('/api/students')
 def all_students():
     pass
 
-@app.route('/api/applicants/<int:id>', methods=["GET", "PATCH", "DELETE"])
+@app.route('/api/students/<int:id>', methods=["GET", "PATCH", "DELETE"])
 def student_by_id():
     pass
 
