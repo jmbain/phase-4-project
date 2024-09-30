@@ -63,6 +63,21 @@ def applicants():
     """Can specifically access Applicant users, i.e. so Staff-type users can see data for an Applicant who has many Students"""
     pass
 
+@app.route('/api/schools', methods=["GET"])
+def all_schools():
+    if request.method == "GET":
+        schools = School.query.all()
+        return [school.to_dict() for school in schools], 200
+
+@app.route('/api/schools/<int:id>', methods=["GET"])
+def school_by_id(id):
+    school = School.query.filter(School.id == id).first()
+    if school is None:
+        return {"error": "school not found"}, 404
+    
+    if request.method == "GET":
+        return school.to_dict(), 200
+
 @app.route('/api/students', methods=["GET", "POST"])
 def all_students():
     if request.method == "GET":

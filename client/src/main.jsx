@@ -8,9 +8,13 @@ import ErrorPage from './components/ErrorPage.jsx'
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import Logout from './components/Logout.jsx'
-import ApplicationEdit from './components/ApplicationEdit.jsx'
-import ApplicationReview from './components/ApplicationReview.jsx'
 
+import ApplicationList from './components/ApplicationList.jsx'
+import StudentList from './components/StudentList.jsx'
+
+//___REVISIT___
+// import ApplicationEdit from './components/ApplicationEdit.jsx'
+// import ApplicationReview from './components/ApplicationReview.jsx'
 
 const router = createBrowserRouter([
   {
@@ -32,15 +36,32 @@ const router = createBrowserRouter([
         element: <Logout />
       },
       {
-        path: '/edit/applications/:id',
-        element: <ApplicationEdit />,
-        loader: applicationsLoader
+        path: '/applications',
+        element: <ApplicationList />,
+        loader: applicationListLoader
       },
       {
-        path: '/review/applications/:id',
-        element: <ApplicationReview />,
-        loader: applicationsLoader
+        path: '/students',
+        element: <StudentList />,
+        loader: studentListLoader
       },
+      {
+        path: '/schools',
+        element: <SchoolList />,
+        loader: schoolListLoader
+      },
+      
+      //_____REVISIT______ Note still need to finish SchoolList component and loader thinking
+      // {
+      //   path: '/edit/applications/:id',
+      //   element: <ApplicationEdit />,
+      //   loader: applicationsLoader
+      // },
+      // {
+      //   path: '/review/applications/:id',
+      //   element: <ApplicationReview />,
+      //   loader: applicationsLoader
+      // },
     ]
   }
 ])

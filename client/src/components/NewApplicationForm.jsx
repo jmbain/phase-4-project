@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
+// NOTE: Ideal state is that instead of form inputs below, each form field is effectively a component that renders options based on what is in the db...
+// NOTE cont... in other words, <option value=student.id name=student.first_name>, <option value=school.id, name=school.school_name)
 
 function NewApplicationForm() {
     
@@ -38,7 +40,7 @@ function NewApplicationForm() {
 
     return (
         <div className="addFunTopicContainer">
-            <h1 className="formheader">Create a New Topic!</h1>
+            <h1 className="formheader">Submit an application!</h1>
             <form className="newApplication" onSubmit={handleSubmit} >
                 <input onChange={updateApplication} value={formData.student} className="forminput" type="text" name="student" placeholder="Student"/>
                 <input onChange={updateApplication} value={formData.school} className="forminput" type="text" name="school" placeholder="School"/>
