@@ -2,7 +2,7 @@
 
 function Header() {
     return (
-        <h1 className="header">Debatabase</h1>
+        <h1 className="header">Applicat-abase</h1>
     )
 }
 

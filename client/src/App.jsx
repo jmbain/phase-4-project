@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import NavBar from './components/ApplicantNavbar'
+import ApplicantNavBar from './components/ApplicantNavbar'
 import { Outlet } from 'react-dom'
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
   const [applications, setApplications] = useState([])
   const [schools, setSchools] = useState([])
   const [students, setStudents] = useState([])
+  const [currentUser, setCurrentUser] = useState("")
 
   //Initial filter logic using applications as an example
   const filteredApplications = applications.filter(application => {
@@ -22,9 +23,13 @@ function App() {
     return application.filter === selectedFilter
   })
 
-  //Initial search logic using schools as an example
+  //Initial search logic using schools and applications as an example
   const searchedSchools = schools.filter(school => {
     return school.school_name.toUpperCase().includes(searchText.toUpperCase())
+  })
+
+  const searchedApplications = applications.filter(application => {
+    return application.school.school_name.toUpperCase().includes(searchText.toUpperCase())
   })
 
   // Not sure if still need, but assuming for now this will be replaced by the loaders...
@@ -52,11 +57,28 @@ function App() {
     ,[]
   )
 
+  //Front End CRUD Operations
+  function addStudent() {
+
+  }
+
+  function updateStudent() {
+
+  }
+
+  function addApplication() {
+
+  }
+
+  function deleteApplication() {
+
+  }
+
   return (
     <>
       <div>
         <Header />
-        <NavBar />
+        <ApplicantNavBar />
         <Outlet />
       </div>
       <div>
