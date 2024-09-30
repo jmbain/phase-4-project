@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function NavBar() {
+function ApplicantNavBar() {
     return (
         <nav className="navbar">
             <NavLink to="/home">Home</NavLink>
@@ -12,4 +12,4 @@ function NavBar() {
     )
 }
 
-export default NavBar;
+export default ApplicantNavBar;

@@ -20,7 +20,10 @@ db = SQLAlchemy(metadata=MetaData(naming_convention=convention))
 bcrypt = Bcrypt()
 
 # create exception class for validation
-class PetException(Exception):
+class ApplicationException(Exception):
+    pass
+
+class StudentException(Exception):
     pass
 
 class Student(db.Model, SerializerMixin):

@@ -11,7 +11,7 @@ import os
 import traceback
 from flask import Flask, request, session
 from flask_migrate import Migrate
-from models import db, Pet, PetException, User
+from models import db, Application, Student, School, User, ApplicationException, StudentException
 from flask_cors import CORS
 
 
@@ -63,21 +63,95 @@ def applicants():
     """Can specifically access Applicant users, i.e. so Staff-type users can see data for an Applicant who has many Students"""
     pass
 
-@app.route('/api/students')
+@app.route('/api/students', methods=["GET", "POST"])
 def all_students():
-    pass
+    if request.method == "GET":
+        students = Student.query.all()
+        return [stud.to_dict() for stud in students], 200
+    if request.method == "POST":
+        data = request.get_json()
+        #Circle back to validation, examples below though...
+        if 'first_name' not in data:
+            return {"error": "first name is required"}, 400
+        if 'last_name' not in data:
+            return {"error": "last name is required"}, 400
+        if 'dob' not in data:
+            return {"error": "date of birth is required"}, 400
+        try:
+            new_student = Student(
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                dob=data.get('dob'),
+                age=data.get('age'),
+                expected_grade_level=data.get('expected_grade_level'),
+                user_relationship=data.get('user_relationship')
+            )
+        except StudentException as e:
+            print(traceback.format_exc())
+            return {'error': str(e)}, 400
+        
+        db.session.add(new_student)
+        db.session.commit()
 
-@app.route('/api/students/<int:id>', methods=["GET", "PATCH", "DELETE"])
-def student_by_id():
-    pass
+        return new_student.to_dict(), 201
 
-@app.route('/api/applications')
+@app.route('/api/students/<int:id>', methods=["GET", "PATCH"])
+def student_by_id(id):
+    stud = Student.query.filter(Student.id == id).first()
+    if stud is None:
+        return {"error": "student not found"}, 404
+    
+    if request.method == "GET":
+        return stud.to_dict(), 200
+    
+    if request.method == "PATCH":
+        pass
+
+@app.route('/api/applications', methods=["GET", "POST"])
 def all_applications():
-    pass
+    if request.method == "GET":
+        applications = Application.query.all()
+        return [appl.to_dict() for appl in applications], 200
+    if request.method == "POST":
+        data = request.get_json()
+        #Circle back to validation, examples below though...
+        if 'student' not in data:
+            return {"error": "student is required"}, 400
+        if 'school' not in data:
+            return {"error": "school is required"}, 400
+        if 'user_signature' not in data:
+            return {"error": "user signature is required"}, 400
+        try:
+            new_application = Application(
+                student=data.get('student'),
+                school=data.get('school'),
+                user=data.get('user'),
+                user_signature=data.get('user_signature')
+            )
+        except ApplicationException as e:
+            print(traceback.format_exc())
+            return {'error': str(e)}, 400
+        
+        db.session.add(new_application)
+        db.session.commit()
 
-@app.route('/api/applications/<int:id>', methods=["GET", "PATCH", "DELETE"])
-def applications_by_id():
-    pass
+        return new_application.to_dict(), 201
+
+
+@app.route('/api/applications/<int:id>', methods=["GET", "DELETE"])
+def applications_by_id(id):
+    appl = Application.query.filter(Application.id == id).first()
+    if appl is None:
+        return {"error": "application not found"}, 404
+    
+    if request.method == "GET":
+        return appl.to_dict(), 200
+    
+    if request.method == "DELETE":
+        db.session.delete(appl)
+        db.session.commit()
+
+        return {}, 204
 
 @app.route('/api/apply', methods=['POST'])
 def apply():
