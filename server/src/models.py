@@ -48,12 +48,12 @@ class Student(db.Model, SerializerMixin):
     serialize_rules = ('-user.students',) # -owner_id is optiona
     # serialize_only = ['name']
 
-#JB note to revisit validates...
-    # @validates('age')
-    # def validates_age(self, key, new_age):
-    #     if new_age < 0:
-    #         raise PetException('age cannot be negative')
-    #     return new_age  # similar to self._age = new_age
+# confirmed this is fine to keep for now, student age should not be less than 0...
+    @validates('age')
+    def validates_age(self, key, new_age):
+        if new_age < 0:
+            raise StudentException('age cannot be negative')
+        return new_age  # similar to self._age = new_age
 
     def __repr__(self) -> str:
         return f'<Student {self.id} {self.first_name} {self.last_name} {self.age} {self.expected_grade_level}>'
@@ -91,7 +91,7 @@ class Application(db.Model, SerializerMixin):
 
     #TBD Not sure this repr will be backwards compatible with students relationship...
     def __repr__(self) -> str:
-        return f'<Application {self.id} Name: {self.students.first_name} {self.students.last_name}>'
+        return f'<Application {self.id} Name: {self.student.first_name} {self.student.last_name} School: {self.school.school_name}>'
 
 
 class User(db.Model, SerializerMixin):
@@ -102,9 +102,11 @@ class User(db.Model, SerializerMixin):
     password_hash = db.Column(db.String)
     user_type = db.Column(db.String, nullable=False) # Applicant vs Staff
     staff_type = db.Column(db.String, nullable=True) # General vs Priveleged
+    school_id = db.Column(db.String, db.ForeignKey('school.id')) #current thinking is this should be for staff users i.e. a staff should have 1 school
 
     students = db.relationship('Student', back_populates="user")
     applications = db.relationship('Application', back_populates="user")
+    school = db.relationship('School', back_populates='user')
 
     serialize_rules = ['-password_hash', '-application.user', '-student.user']
 

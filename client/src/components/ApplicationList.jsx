@@ -1,4 +1,4 @@
-import Application from "./ApplicationCard"
+import ApplicationCard from "./ApplicationCard"
 
 import { useOutletContext } from "react-dom";
 
@@ -9,7 +9,7 @@ function ApplicationList() {
     // This displays Application components via a map of the application list
     const applicationComponents = filteredApplications.map(application => {
         
-        return <Application key={application.id} school={application.school.school_name} student_fn={application.student.first_name} student_ln={application.student.last_name} />
+        return <ApplicationCard key={application.id} school={application.school.school_name} student_fn={application.student.first_name} student_ln={application.student.last_name} />
     })
     
     return (

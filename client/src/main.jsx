@@ -1,16 +1,17 @@
 import { StrictMode } from 'react'
-import { createRoot, ReactDOM } from 'react-dom/client'
+import { createRoot, ReactDOM } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
-import {userLoader, applicationsLoader} from './Loaders.js'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import {userLoader, applicationListLoader, studentListLoader, schoolListLoader} from './Loaders.js'
+import {createBrowserRouter, RouterProvider} from 'react-dom'
 import ErrorPage from './components/ErrorPage.jsx'
 import Home from './components/Home.jsx'
-import Login from './components/Login.jsx'
-import Logout from './components/Logout.jsx'
+// import Login from './components/Login.jsx'
+// import Logout from './components/Logout.jsx'
 
 import ApplicationList from './components/ApplicationList.jsx'
 import StudentList from './components/StudentList.jsx'
+import SchoolList from './components/SchoolList.jsx'
 
 //___REVISIT___
 // import ApplicationEdit from './components/ApplicationEdit.jsx'
@@ -21,20 +22,20 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
-    loarder: userLoader,
+    loader: userLoader,
     children: [
       {
         path:'/',
         element: <Home />
       },
-      {
-        path: '/login',
-        element: <Login />
-      },
-      {
-        path: '/logout',
-        element: <Logout />
-      },
+      // {
+      //   path: '/login',
+      //   element: <Login />
+      // },
+      // {
+      //   path: '/logout',
+      //   element: <Logout />
+      // },
       {
         path: '/applications',
         element: <ApplicationList />,

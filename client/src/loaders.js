@@ -48,3 +48,12 @@ async function schoolDetailLoader({ request, params }) {
         .then(resp => resp.json())
     return res
   }
+
+export {
+    applicationDetailLoader,
+    applicationListLoader,
+    studentDetailLoader,
+    studentListLoader,
+    userLoader,
+    schoolListLoader
+}

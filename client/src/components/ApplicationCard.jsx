@@ -1,6 +1,6 @@
 import { Link } from "react-dom";
 
-function Application({application}) {
+function ApplicationCard({application}) {
     
     
     return (
@@ -10,4 +10,4 @@ function Application({application}) {
     )
 }
 
-export default Application;
+export default ApplicationCard;

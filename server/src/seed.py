@@ -24,8 +24,11 @@ def run():
 
     #Seed users - note doing this in individual variables instead of array because students will be assigned parent users like pets had owners
     smith123 = User(username="smith123", user_type="applicant", zip=60629)
+    self123 = User(username="self123", user_type="applicant", zip=60629)
+    dovetheworld123 = User(username="dovetheworld123", user_type="applicant", zip=60629)
+    berry123 = User(username="berry123", user_type="applicant", zip=60629)
 
-    db.session.add_all([smith123, ])
+    db.session.add_all([smith123, self123, dovetheworld123, berry123])
     db.session.commit()
 
     #Seed students; note circle back to adding user= to all students similar to how pets had owner and rethink user_student relationship (E.g. should it live on student or what?)
@@ -44,7 +47,17 @@ def run():
 
     #Seed Applications; revisit after talking to Ben
     applications = [
-        Application()
+        Application(student_id=1, school_id=1, user_id=1, user_signature="Test 1"),
+        Application(student_id=2, school_id=1, user_id=1, user_signature="Test 1"),
+        Application(student_id=1, school_id=2, user_id=1, user_signature="Test 1"),
+        Application(student_id=2, school_id=2, user_id=1, user_signature="Test 1"),
+        Application(student_id=3, school_id=3, user_id=2, user_signature="Test 1"),
+        Application(student_id=4, school_id=4, user_id=3, user_signature="Test 1"),
+        Application(student_id=5, school_id=5, user_id=4, user_signature="Test 1"),
+        Application(student_id=6, school_id=6, user_id=4, user_signature="Test 1"),
+        Application(student_id=4, school_id=4, user_id=3, user_signature="Test 1"),
+        Application(student_id=4, school_id=5, user_id=3, user_signature="Test 1"),
+        Application(student_id=4, school_id=6, user_id=3, user_signature="Test 1")
     ]
 
     db.session.add_all(applications)
